@@ -32,5 +32,12 @@ jobs:
           echo "BASE=$base" >> $GITHUB_ENV
           echo "HEAD=${{ github.event.pull_request.head.sha }}" >> $GITHUB_ENV
     - name: Check for whitespace issues.
-      run: git log --check ${{ env.BASE }}...${{ env.HEAD }} | grep "^[^:+]*:[0-9]*:" && false || true
+      run: |
+           if git log --check ${{ env.BASE }}...${{ env.HEAD }} | grep "^[^:+]*:[0-9]*:"; then
+             echo "Found whitespace issues in pull request"
+             false
+           else
+             echo "No whitespace issues in pull request"
+             true
+           fi
     # TODO: Add more checks here (codespell, ...).
